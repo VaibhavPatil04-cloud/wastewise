@@ -1,0 +1,295 @@
+/* Upcycling Tips Section */
+.upcycling-section {
+  padding: 6rem 2rem;
+  background: rgba(16, 185, 129, 0.02);
+  border-top: 1px solid rgba(16, 185, 129, 0.1);
+}
+
+.upcycling-header {
+  text-align: center !important;
+  margin-bottom: 4rem;
+}
+
+.upcycling-title {
+  font-size: 3rem;
+  font-weight: 700;
+  color: #10b981;
+  margin-bottom: 1rem;
+  font-family: 'Playfair Display', serif;
+  text-align: center !important;
+}
+
+.upcycling-subtitle {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.7);
+  max-width: 700px;
+  margin: 0 auto;
+  font-family: 'Playfair Display', serif;
+  text-align: center !important;
+}
+
+/* Projects Grid - KEEP YOUR CURRENT LAYOUT */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Project Card */
+.project-card {
+  background: linear-gradient(145deg, rgba(31, 41, 55, 0.6), rgba(17, 24, 39, 0.8));
+  border: 1px solid rgba(75, 85, 99, 0.3);
+  border-radius: 1.5rem;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+  position: relative;
+}
+
+.project-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+}
+
+.project-card:hover::before {
+  opacity: 1;
+}
+
+.project-header {
+  position: relative;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(52, 211, 153, 0.1));
+  padding: 3rem;
+  text-align: center;
+  border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+  z-index: 1;
+}
+
+.project-image {
+  font-size: 5rem;
+  animation: float 3s ease-in-out infinite;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.project-image svg {
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.favorite-btn {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
+  z-index: 2;
+}
+
+.favorite-btn:hover {
+  border-color: rgba(255, 255, 255, 0.4);
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.favorite-btn.active {
+  animation: heartbeat 0.3s ease;
+}
+
+@keyframes heartbeat {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.2);
+  }
+}
+
+/* Project Content */
+.project-content {
+  padding: 2rem;
+  position: relative;
+  z-index: 1;
+}
+
+.project-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 1rem;
+  font-family: 'Playfair Display', serif;
+}
+
+/* Project Meta */
+.project-meta {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.difficulty-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  color: white;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+  cursor: pointer;
+}
+
+.time-badge {
+  padding: 0.5rem 1rem;
+  border-radius: 9999px;
+  background: rgba(59, 130, 246, 0.2);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  color: #60a5fa;
+  font-size: 0.875rem;
+  font-weight: 600;
+  font-family: 'Playfair Display', serif;
+  cursor: pointer;
+}
+
+/* Materials & Instructions */
+.project-materials,
+.project-instructions {
+  margin-bottom: 1.5rem;
+}
+
+.project-materials h4,
+.project-instructions h4 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #10b981;
+  margin-bottom: 0.75rem;
+  font-family: 'Playfair Display', serif;
+}
+
+.project-materials ul {
+  list-style: none;
+  padding: 0;
+}
+
+.project-materials li {
+  padding: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Playfair Display', serif;
+}
+
+.project-materials li:before {
+  content: "✓ ";
+  color: #10b981;
+  font-weight: bold;
+  margin-right: 0.5rem;
+}
+
+.project-instructions ol {
+  padding-left: 1.5rem;
+  counter-reset: step-counter;
+  list-style: none;
+}
+
+.project-instructions li {
+  padding: 0.5rem 0;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Playfair Display', serif;
+  counter-increment: step-counter;
+  position: relative;
+}
+
+.project-instructions li:before {
+  content: counter(step-counter) ". ";
+  color: #10b981;
+  font-weight: bold;
+  position: absolute;
+  left: -1.5rem;
+}
+
+/* Project Impact */
+.project-impact {
+  padding: 1rem;
+  background: rgba(16, 185, 129, 0.1);
+  border-left: 4px solid #10b981;
+  border-radius: 0.5rem;
+  margin-top: 1rem;
+}
+
+.project-impact strong {
+  color: #10b981;
+  font-family: 'Playfair Display', serif;
+}
+
+.project-impact p {
+  margin-top: 0.5rem;
+  color: rgba(255, 255, 255, 0.8);
+  font-family: 'Playfair Display', serif;
+  font-size: 0.95rem;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .upcycling-title {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .upcycling-section {
+    padding: 4rem 1rem;
+  }
+
+  .upcycling-title {
+    font-size: 2rem;
+  }
+
+  .upcycling-subtitle {
+    font-size: 1rem;
+  }
+
+  /* Single column on tablet */
+  .projects-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 480px) {
+  .project-image {
+    font-size: 4rem;
+  }
+
+  .project-title {
+    font-size: 1.5rem;
+  }
+
+  .project-header {
+    padding: 2rem;
+  }
+
+  .project-content {
+    padding: 1.5rem;
+  }
+}

@@ -1,0 +1,231 @@
+/* Classification Slider Section */
+.classification-slider-section {
+  padding: 6rem 2rem;
+  background: rgba(16, 185, 129, 0.02);
+  border-top: 1px solid rgba(16, 185, 129, 0.1);
+  overflow: hidden;
+}
+
+.classification-title {
+  text-align: center;
+  font-size: 3rem;
+  font-weight: 700;
+  color: #10b981;
+  margin-bottom: 1rem;
+  font-family: 'Playfair Display', serif;
+}
+
+.classification-subtitle {
+  text-align: center;
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 4rem;
+  font-family: 'Playfair Display', serif;
+}
+
+.classification-slider-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Auto-scrolling track */
+.classification-slider-track {
+  display: flex;
+  gap: 2rem;
+  animation: slide 30s linear infinite;
+  width: fit-content;
+}
+
+.classification-slider-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes slide {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Classification Cards */
+.classification-card {
+  flex: 0 0 350px;
+  min-height: 320px;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border: 3px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.classification-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), transparent);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.classification-card:hover::before {
+  opacity: 1;
+}
+
+.classification-card:hover {
+  transform: translateY(-12px) scale(1.02);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+}
+
+/* Specific bin color borders */
+.wet-waste {
+  border-color: #22c55e;
+}
+
+.wet-waste:hover {
+  box-shadow: 0 20px 50px rgba(34, 197, 94, 0.4);
+}
+
+.dry-waste {
+  border-color: #3b82f6;
+}
+
+.dry-waste:hover {
+  box-shadow: 0 20px 50px rgba(59, 130, 246, 0.4);
+}
+
+.hazardous-waste {
+  border-color: #ef4444;
+}
+
+.hazardous-waste:hover {
+  box-shadow: 0 20px 50px rgba(239, 68, 68, 0.4);
+}
+
+.recyclable-waste {
+  border-color: #eab308;
+}
+
+.recyclable-waste:hover {
+  box-shadow: 0 20px 50px rgba(234, 179, 8, 0.4);
+}
+
+/* Tip Card Content */
+.tip-icon-large {
+  font-size: 4rem;
+  margin-bottom: 1.5rem;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+  animation: bounce 2s ease-in-out infinite;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+.tip-category-title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: #1f2937;
+  margin-bottom: 1rem;
+  font-family: 'Playfair Display', serif;
+}
+
+.tip-description-text {
+  color: #4b5563;
+  font-size: 1rem;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+  flex-grow: 1;
+}
+
+.tip-bin-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.classification-card:hover .tip-bin-badge {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+}
+
+.bin-icon {
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bin-name {
+  color: #1f2937;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .classification-card {
+    flex: 0 0 300px;
+    min-height: 300px;
+    padding: 2rem;
+  }
+
+  .classification-title {
+    font-size: 2.5rem;
+  }
+
+  .tip-icon-large {
+    font-size: 3.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .classification-slider-section {
+    padding: 4rem 1rem;
+  }
+
+  .classification-card {
+    flex: 0 0 280px;
+    min-height: 280px;
+    padding: 1.5rem;
+  }
+
+  .classification-title {
+    font-size: 2rem;
+  }
+
+  .classification-subtitle {
+    font-size: 1rem;
+  }
+
+  .tip-category-title {
+    font-size: 1.5rem;
+  }
+
+  .tip-icon-large {
+    font-size: 3rem;
+  }
+}

@@ -4,6 +4,7 @@
   min-height: 100vh;
   display: flex;
   align-items: center;
+  justify-content: center;
   overflow: hidden;
   padding: 4rem 2rem;
   background: radial-gradient(ellipse at top, rgba(16, 185, 129, 0.15), transparent 50%),
@@ -67,15 +68,15 @@
   }
 }
 
-.hero-content {
+/* Centered Hero Content */
+.hero-content-centered {
   position: relative;
   z-index: 10;
-  max-width: 1400px;
+  max-width: 1600px;
+  width: 100%;
   margin: 0 auto;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 4rem;
-  align-items: center;
+  text-align: center;
+  padding: 0 3rem;
 }
 
 .hero-title {
@@ -98,41 +99,54 @@
   font-family: 'Playfair Display', serif;
 }
 
+/* CTA Buttons - Compact Size */
 .hero-cta-container {
   display: flex;
   gap: 1rem;
-  margin-bottom: 3rem;
+  margin-bottom: 2.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
 }
 
 .cta-primary, .cta-secondary {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  padding: 1.25rem 2.5rem;
-  border-radius: 9999px;
-  font-size: 1.125rem;
+  gap: 0.625rem;
+  padding: 0.875rem 1.75rem;
+  border-radius: 12px;
+  font-size: 1rem;
   font-weight: 600;
   font-family: 'Playfair Display', serif;
   cursor: pointer;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   border: none;
   position: relative;
   overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
 }
 
+/* Primary Button - Keep Text White Always */
 .cta-primary {
-  background: linear-gradient(135deg, #10b981, #059669);
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
   color: white;
-  box-shadow: 0 10px 40px rgba(16, 185, 129, 0.4);
+  border: 2px solid transparent;
+}
+
+.cta-primary span,
+.cta-primary .cta-icon {
+  position: relative;
+  z-index: 1;
+  color: white !important;
 }
 
 .cta-primary::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(135deg, #059669, #047857);
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
   opacity: 0;
-  transition: opacity 0.4s;
+  transition: opacity 0.3s ease;
+  z-index: 0;
 }
 
 .cta-primary:hover::before {
@@ -140,78 +154,115 @@
 }
 
 .cta-primary:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 20px 60px rgba(16, 185, 129, 0.5);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
 }
 
+.cta-primary:active {
+  transform: translateY(-1px);
+}
+
+/* Secondary Button - Outline Style */
 .cta-secondary {
-  background: transparent;
+  background: rgba(16, 185, 129, 0.05);
   color: #10b981;
-  border: 2px solid rgba(16, 185, 129, 0.5);
+  border: 2px solid #10b981;
+  backdrop-filter: blur(10px);
+}
+
+.cta-secondary span,
+.cta-secondary .cta-icon-small {
+  position: relative;
+  z-index: 1;
+}
+
+.cta-secondary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.15), rgba(16, 185, 129, 0.05));
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.cta-secondary:hover::before {
+  opacity: 1;
 }
 
 .cta-secondary:hover {
-  background: rgba(16, 185, 129, 0.1);
-  border-color: #10b981;
-  transform: translateY(-4px);
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+  border-color: #34d399;
+  color: #34d399;
 }
 
+.cta-secondary:active {
+  transform: translateY(-1px);
+}
+
+/* Icon Styles */
 .cta-icon {
-  font-size: 1.5rem;
+  font-size: 1.1rem;
   position: relative;
   z-index: 1;
+  transition: transform 0.3s ease;
 }
 
-.cta-arrow {
-  font-size: 1.25rem;
-  transition: transform 0.3s;
+.cta-icon-small {
+  font-size: 0.95rem;
   position: relative;
   z-index: 1;
+  transition: transform 0.3s ease;
 }
 
-.cta-primary:hover .cta-arrow {
-  transform: translateX(5px);
+.cta-primary:hover .cta-icon,
+.cta-secondary:hover .cta-icon-small {
+  transform: scale(1.1);
 }
 
+/* Search Bar Container - MAXIMUM WIDTH */
+.hero-search-container {
+  margin-bottom: 2.5rem;
+  width: 100%;
+  max-width: none !important;
+  padding: 0;
+  margin-left: 0;
+  margin-right: 0;
+}
+
+/* Feature Badges */
 .feature-badges {
   display: flex;
-  gap: 2rem;
+  gap: 2.5rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 1rem;
 }
 
 .feature-badge {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  color: rgba(255, 255, 255, 0.8);
-  font-size: 0.95rem;
+  gap: 0.6rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
   font-family: 'Playfair Display', serif;
+  padding: 0.5rem 1rem;
+  background: rgba(16, 185, 129, 0.05);
+  border-radius: 50px;
+  border: 1px solid rgba(16, 185, 129, 0.2);
+  transition: all 0.3s ease;
+}
+
+.feature-badge:hover {
+  background: rgba(16, 185, 129, 0.1);
+  border-color: rgba(16, 185, 129, 0.4);
+  transform: translateY(-2px);
 }
 
 .badge-icon {
-  font-size: 1.5rem;
-}
-
-.hero-image-container {
-  position: relative;
-  width: 100%;
-  height: 600px;
-}
-
-.hero-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 2rem;
-  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.5);
-}
-
-.hero-image-glow {
-  position: absolute;
-  inset: -20px;
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.3), rgba(59, 130, 246, 0.2));
-  filter: blur(60px);
-  z-index: -1;
-  border-radius: 2rem;
+  font-size: 1.25rem;
+  color: #10b981;
 }
 
 /* How It Works Section */
@@ -222,13 +273,16 @@
 }
 
 .section-title {
-  text-align: center;
+  text-align: center !important;
   font-size: 3rem;
   font-weight: 700;
   color: #10b981;
   margin-bottom: 4rem;
   font-family: 'Playfair Display', serif;
+  display: block;
+  width: 100%;
 }
+
 
 .steps-container {
   display: grid;
@@ -275,7 +329,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 3rem;
+  font-size: 2.5rem;
+  color: white;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
 }
 
@@ -291,6 +346,7 @@
   color: rgba(255, 255, 255, 0.7);
   font-size: 1.05rem;
   line-height: 1.6;
+  font-family: 'Playfair Display', serif;
 }
 
 .step-number {
@@ -350,11 +406,22 @@
   font-family: 'Playfair Display', serif;
 }
 
-@media (max-width: 1024px) {
-  .hero-content {
-    grid-template-columns: 1fr;
+/* Responsive Design */
+@media (max-width: 1400px) {
+  .hero-content-centered {
+    max-width: 1400px;
+    padding: 0 2.5rem;
   }
+}
 
+@media (max-width: 1200px) {
+  .hero-content-centered {
+    max-width: 1200px;
+    padding: 0 2rem;
+  }
+}
+
+@media (max-width: 1024px) {
   .hero-title {
     font-size: 3rem;
   }
@@ -366,6 +433,17 @@
   .stats-grid {
     grid-template-columns: repeat(2, 1fr);
   }
+
+  .hero-content-centered {
+    max-width: 1000px;
+    padding: 0 1.5rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-content-centered {
+    padding: 0 1rem;
+  }
 }
 
 @media (max-width: 640px) {
@@ -373,8 +451,18 @@
     font-size: 2.5rem;
   }
 
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
   .hero-cta-container {
     flex-direction: column;
+    gap: 1rem;
+  }
+
+  .cta-primary, .cta-secondary {
+    width: 100%;
+    justify-content: center;
   }
 
   .feature-badges {
@@ -386,75 +474,7 @@
     grid-template-columns: 1fr;
   }
 }
-.hero-search-container {
-  margin-bottom: 2rem;
-}
 
-.classification-tips-container {
-  width: 100%;
-}
-
-.tips-title {
-  font-size: 2rem;
-  font-weight: 700;
-  color: #10b981;
-  text-align: center;
-  margin-bottom: 2rem;
-  font-family: 'Playfair Display', serif;
-}
-
-.tips-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 1.5rem;
-}
-
-.tip-card {
-  background: linear-gradient(145deg, rgba(31, 41, 55, 0.6), rgba(17, 24, 39, 0.8));
-  border: 2px solid rgba(75, 85, 99, 0.3);
-  border-radius: 1rem;
-  padding: 1.5rem;
-  transition: all 0.4s ease;
-  backdrop-filter: blur(10px);
-}
-
-.tip-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 15px 40px rgba(16, 185, 129, 0.3);
-}
-
-.wet-waste { border-color: rgba(34, 197, 94, 0.5); }
-.dry-waste { border-color: rgba(59, 130, 246, 0.5); }
-.hazardous-waste { border-color: rgba(239, 68, 68, 0.5); }
-.recyclable-waste { border-color: rgba(234, 179, 8, 0.5); }
-
-.tip-icon {
-  font-size: 3rem;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.tip-category {
-  font-size: 1.25rem;
-  font-weight: 700;
-  color: white;
-  margin-bottom: 0.75rem;
-  font-family: 'Playfair Display', serif;
-}
-
-.tip-description {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 0.95rem;
-  line-height: 1.5;
-  margin-bottom: 1rem;
-}
-
-.tip-bin {
-  display: inline-block;
-  padding: 0.5rem 1rem;
-  background: rgba(16, 185, 129, 0.2);
-  border-radius: 9999px;
-  color: #10b981;
-  font-weight: 600;
-  font-size: 0.9rem;
+.upcycling-title {
+text-align: center !important;
 }
