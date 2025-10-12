@@ -475,6 +475,22 @@
   }
 }
 
-.upcycling-title {
-text-align: center !important;
+.upcycling-header {
+  text-align: center !important;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+#upcycling-tips .upcycling-title {
+  text-align: center !important;
+  display: block;
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+#upcycling-tips .upcycling-subtitle {
+  text-align: center !important;
 }

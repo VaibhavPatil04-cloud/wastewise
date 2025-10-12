@@ -42,7 +42,7 @@ const Header = () => {
     { id: 'home', label: 'Home', type: 'scroll' },
     { id: 'how-it-works', label: 'How It Works', type: 'scroll' },
     { id: 'upcycling-tips', label: 'Upcycling Tips', type: 'scroll' },
-    { path: '/about', label: 'About', type: 'route' },
+    { id: 'footer', label: 'About', type: 'scroll' }, // Changed to scroll to footer
   ];
 
   return (
@@ -60,26 +60,15 @@ const Header = () => {
 
         <nav className="nav-menu">
           {navItems.map((item, idx) => (
-            item.type === 'scroll' ? (
-              <motion.button
-                key={idx}
-                onClick={() => scrollToSection(item.id)}
-                className={`nav-link ${location.pathname === '/' && location.hash === `#${item.id}` ? 'active' : ''}`}
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <span className="nav-label">{item.label}</span>
-              </motion.button>
-            ) : (
-              <motion.div key={idx}>
-                <Link
-                  to={item.path}
-                  className={`nav-link ${location.pathname === item.path ? 'active' : ''}`}
-                >
-                  <span className="nav-label">{item.label}</span>
-                </Link>
-              </motion.div>
-            )
+            <motion.button
+              key={idx}
+              onClick={() => scrollToSection(item.id)}
+              className={`nav-link ${location.pathname === '/' && location.hash === `#${item.id}` ? 'active' : ''}`}
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <span className="nav-label">{item.label}</span>
+            </motion.button>
           ))}
         </nav>
 

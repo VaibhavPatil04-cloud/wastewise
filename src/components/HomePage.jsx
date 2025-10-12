@@ -12,6 +12,14 @@ const HomePage = () => {
   const [showCamera, setShowCamera] = useState(false);
   const navigate = useNavigate();
 
+  // Function to scroll to How It Works section
+  const scrollToHowItWorks = () => {
+    const element = document.getElementById('how-it-works');
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  };
+
   return (
     <>
       {/* Hero Section - Clean Design */}
@@ -59,7 +67,7 @@ const HomePage = () => {
             </button>
 
             <button 
-              onClick={() => navigate('/how-it-works')}
+              onClick={scrollToHowItWorks}
               className="cta-secondary"
             >
               <FaPlay className="cta-icon-small" />
@@ -143,11 +151,11 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* Classification Slider */}
-      <ClassificationSlider />
-
       {/* Upcycling Tips - Replacing Featured Items */}
       <UpcyclingTips />
+
+      {/* Classification Slider */}
+      <ClassificationSlider />
 
       {/* Stats Section */}
       <section className="stats-section">
