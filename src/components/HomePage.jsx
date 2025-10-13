@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { FaCamera, FaPlay, FaBolt, FaGlobeAmericas, FaBullseye, FaCamera as FaCameraAlt, FaRobot, FaRecycle } from 'react-icons/fa';
 import CameraCapture from './CameraCapture';
 import UpcyclingTips from './UpcyclingTips';
@@ -16,6 +16,7 @@ const HomePage = () => {
   const videoRef = useRef(null);
   const timerRef = useRef(null);
   const navigate = useNavigate();
+  const location = useLocation();
 
   // Initial delay before showing video for the first time
   useEffect(() => {
@@ -103,6 +104,20 @@ const HomePage = () => {
       element.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   };
+
+  // Scroll handling when navigating from other pages
+  useEffect(() => {
+    if (location.state && location.state.scrollTo) {
+      const element = document.getElementById(location.state.scrollTo);
+      if (element) {
+        setTimeout(() => {
+          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }, 100);
+      }
+      // Clear the state after scrolling
+      window.history.replaceState({}, document.title);
+    }
+  }, [location]);
 
   return (
     <>

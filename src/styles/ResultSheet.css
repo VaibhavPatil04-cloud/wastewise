@@ -368,3 +368,172 @@
     font-size: 1rem;
   }
 }
+
+/* AI Badge */
+.result-title-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Environmental Impact */
+.environmental-impact {
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+  border-left: 4px solid #667eea;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.environmental-impact h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2d3748;
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+}
+
+.environmental-impact h3 svg {
+  color: #48bb78;
+}
+
+.environmental-impact p {
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Disposal Instructions */
+.disposal-instructions {
+  background: #f7fafc;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.disposal-instructions h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2d3748;
+  font-size: 1.1rem;
+  margin-bottom: 12px;
+}
+
+.disposal-instructions p {
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Add these new styles to your existing ResultSheet.css */
+
+/* AI Badge */
+.result-title-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-bottom: 12px;
+}
+
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.8;
+  }
+}
+
+/* Environmental Impact Section */
+.environmental-impact {
+  background: linear-gradient(135deg, #48bb7815 0%, #38a16915 100%);
+  border-left: 4px solid #48bb78;
+  padding: 16px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.environmental-impact h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2d3748;
+  font-size: 1.05rem;
+  margin: 0 0 8px 0;
+  font-weight: 600;
+}
+
+.environmental-impact h3 svg {
+  color: #48bb78;
+}
+
+.environmental-impact p {
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Disposal Instructions Section */
+.disposal-instructions {
+  background: #f7fafc;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+}
+
+.disposal-instructions h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #2d3748;
+  font-size: 1.05rem;
+  margin: 0 0 12px 0;
+  font-weight: 600;
+}
+
+.disposal-instructions p {
+  color: #4a5568;
+  line-height: 1.6;
+  margin: 0;
+  font-size: 0.95rem;
+}

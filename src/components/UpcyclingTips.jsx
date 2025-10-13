@@ -122,7 +122,7 @@ const UpcyclingTips = () => {
   };
 
   return (
-    <section className="upcycling-section" id="upcycling">
+    <section className="upcycling-section" id="upcycling-section">
       <motion.div
         className="upcycling-header"
         variants={headerVariants}

@@ -20,28 +20,29 @@ const Header = () => {
 
   // Smooth scroll to section on home page
   const scrollToSection = (sectionId) => {
-    if (location.pathname !== '/') {
-      // Navigate to home first, then scroll
-      navigate('/');
-      setTimeout(() => {
-        const element = document.getElementById(sectionId);
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
-    } else {
-      // Already on home page, just scroll
+    if (sectionId === 'home') {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return;
+    }
+
+    const scrollToElement = () => {
       const element = document.getElementById(sectionId);
       if (element) {
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
       }
+    };
+
+    if (location.pathname !== '/') {
+      navigate('/', { state: { scrollTo: sectionId } });
+    } else {
+      scrollToElement();
     }
   };
 
   const navItems = [
     { id: 'home', label: 'Home', type: 'scroll' },
     { id: 'how-it-works', label: 'How It Works', type: 'scroll' },
-    { id: 'upcycling-tips', label: 'Upcycling Tips', type: 'scroll' },
+    { id: 'upcycling-section', label: 'Upcycling Tips', type: 'scroll' }, // Updated ID
     { id: 'footer', label: 'About', type: 'scroll' }, // Changed to scroll to footer
   ];
 

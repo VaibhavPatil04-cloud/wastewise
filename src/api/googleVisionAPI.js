@@ -10,7 +10,9 @@
 // src/api/googleVisionAPI.js
 // Google Cloud Vision API Integration
 
-const GOOGLE_VISION_API_KEY = process.env.REACT_APP_GOOGLE_VISION_API_KEY;const VISION_API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_VISION_API_KEY}`;
+const GOOGLE_VISION_API_KEY = 'AIzaSyB6ggAIqBkT5mRC1vCgAhc2f6DXQf2kMiI';
+const VISION_API_URL = `https://vision.googleapis.com/v1/images:annotate?key=${GOOGLE_VISION_API_KEY}`;
+
 
 /**
  * Waste category mapping from Google Vision labels to your bin categories
