@@ -1,18 +1,36 @@
-// Placeholder for AI classification API integration
-// Replace with actual Azure Computer Vision, OpenAI Vision, or Google Cloud Vision calls
+// src/api/wasteClassifier.js
+// Updated to use Google Vision API
 
+import { analyzeWasteWithGoogleVision } from './googleVisionAPI';
+
+/**
+ * Main function to classify waste using Google Vision API
+ * Falls back to mock data if API fails
+ */
 export const classifyWaste = async (imageBase64, locale) => {
-  // Simulate API delay
-  await new Promise(resolve => setTimeout(resolve, 1500));
+  try {
+    console.log('Starting waste classification with Google Vision API...');
+    
+    // Call Google Vision API
+    const result = await analyzeWasteWithGoogleVision(imageBase64);
+    
+    console.log('Classification successful:', result);
+    return result;
 
-  // Mock AI response - Replace with actual API call
-  // Example:
-  // const response = await fetch('YOUR_AI_ENDPOINT', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify({ image: imageBase64, locale })
-  // });
-  // return await response.json();
+  } catch (error) {
+    console.error('Google Vision API failed, using fallback:', error);
+    
+    // Fallback to mock data if API fails
+    return await mockClassification();
+  }
+};
+
+/**
+ * Mock classification for fallback or testing
+ */
+const mockClassification = async () => {
+  // Simulate API delay
+  await new Promise(resolve => setTimeout(resolve, 1000));
 
   const mockResults = [
     {
@@ -41,12 +59,13 @@ export const classifyWaste = async (imageBase64, locale) => {
     }
   ];
 
-  // Return random mock result
   return mockResults[Math.floor(Math.random() * mockResults.length)];
 };
 
+/**
+ * Lookup barcode in database (future enhancement)
+ */
 export const lookupBarcode = async (barcode, locale) => {
-  // Simulate database lookup
   await new Promise(resolve => setTimeout(resolve, 800));
 
   const barcodeDatabase = {
@@ -56,13 +75,6 @@ export const lookupBarcode = async (barcode, locale) => {
       contaminated: false,
       preparation: ['Rinse bottle', 'Remove cap', 'Recycle cap separately'],
       upcyclingTip: 'Use as water bottle holder or craft material'
-    },
-    '012000161551': {
-      name: 'Sprite Can',
-      category: 'plastics',
-      contaminated: false,
-      preparation: ['Rinse can', 'Crush to save space'],
-      upcyclingTip: 'Use for small storage or craft projects'
     }
   };
 
@@ -73,28 +85,4 @@ export const lookupBarcode = async (barcode, locale) => {
     preparation: ['Check product packaging for disposal instructions'],
     upcyclingTip: null
   };
-};
-
-// Integration example for Azure Computer Vision
-export const classifyWithAzure = async (imageBase64) => {
-  const endpoint = 'YOUR_AZURE_ENDPOINT';
-  const key = 'YOUR_AZURE_KEY';
-
-  try {
-    const response = await fetch(`${endpoint}/vision/v3.2/analyze?visualFeatures=Tags,Description`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Ocp-Apim-Subscription-Key': key
-      },
-      body: JSON.stringify({ url: imageBase64 })
-    });
-
-    const data = await response.json();
-    // Process Azure response and map to waste categories
-    return data;
-  } catch (error) {
-    console.error('Azure classification error:', error);
-    throw error;
-  }
 };

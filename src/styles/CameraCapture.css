@@ -503,3 +503,45 @@
     font-size: 0.95rem;
   }
 }
+
+/* Add this to src/styles/CameraCapture.css */
+
+/* Error Message */
+.ultra-error-message {
+  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.1));
+  border: 1px solid rgba(239, 68, 68, 0.4);
+  border-left: 4px solid #ef4444;
+  padding: 1rem 1.25rem;
+  margin: 1rem 1.5rem;
+  border-radius: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: #fca5a5;
+  font-size: 0.95rem;
+  font-family: 'Playfair Display', serif;
+  animation: shake 0.5s ease-in-out;
+}
+
+.ultra-error-message span:first-child {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+
+/* Loading state for buttons */
+.ultra-action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none !important;
+}
+
+.ultra-action-btn:disabled:hover {
+  transform: none !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
