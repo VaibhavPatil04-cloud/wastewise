@@ -1,11 +1,9 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { motion } from 'framer-motion';
-import { FaSeedling, FaBox, FaLightbulb, FaCouch } from 'react-icons/fa';
+import { FaSeedling, FaBox, FaLightbulb, FaCouch, FaArrowRight } from 'react-icons/fa';
 import '../styles/UpcyclingTips.css';
 
 const UpcyclingTips = () => {
-  const [favorites, setFavorites] = useState([]);
-
   const upcyclingProjects = [
     {
       id: 1,
@@ -81,14 +79,6 @@ const UpcyclingTips = () => {
     }
   ];
 
-  const toggleFavorite = (id) => {
-    setFavorites(prev =>
-      prev.includes(id)
-        ? prev.filter(fav => fav !== id)
-        : [...prev, id]
-    );
-  };
-
   const getDifficultyColor = (difficulty) => {
     switch(difficulty) {
       case 'Easy': return '#4CAF50';
@@ -100,8 +90,8 @@ const UpcyclingTips = () => {
 
   // Animation variants for cards
   const cardVariants = {
-    hidden: { 
-      opacity: 0, 
+    hidden: {
+      opacity: 0,
       y: 50,
       scale: 0.9
     },
@@ -133,10 +123,10 @@ const UpcyclingTips = () => {
     <section id="upcycling-tips" className="upcycling-section">
       <motion.div 
         className="upcycling-header"
-        variants={headerVariants}
         initial="hidden"
         whileInView="visible"
         viewport={{ once: true }}
+        variants={headerVariants}
       >
         <h2 className="upcycling-title">Upcycling Tips & Ideas</h2>
         <p className="upcycling-subtitle">
@@ -152,66 +142,42 @@ const UpcyclingTips = () => {
               key={project.id}
               className="project-card"
               custom={index}
-              variants={cardVariants}
               initial="hidden"
               whileInView="visible"
               viewport={{ once: true, margin: "-100px" }}
-              whileHover={{ 
-                scale: 1.03,
-                boxShadow: "0 25px 60px rgba(16, 185, 129, 0.3)"
-              }}
+              variants={cardVariants}
+              whileHover={{ y: -10, transition: { duration: 0.3 } }}
             >
               <div className="project-header">
-                <motion.div 
-                  className="project-image" 
-                  style={{ color: project.iconColor }}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <IconComponent />
-                </motion.div>
-                <motion.button
-                  onClick={() => toggleFavorite(project.id)}
-                  className={`favorite-btn ${favorites.includes(project.id) ? 'active' : ''}`}
-                  whileHover={{ scale: 1.2 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  {favorites.includes(project.id) ? '❤️' : '🤍'}
-                </motion.button>
+                <div className="project-image">
+                  <IconComponent style={{ color: project.iconColor }} />
+                </div>
               </div>
 
               <div className="project-content">
                 <h3 className="project-title">{project.title}</h3>
 
                 <div className="project-meta">
-                  <motion.span
+                  <span 
                     className="difficulty-badge"
-                    style={{ backgroundColor: getDifficultyColor(project.difficulty) }}
-                    whileHover={{ scale: 1.05 }}
+                    style={{ 
+                      background: `${getDifficultyColor(project.difficulty)}20`,
+                      border: `1px solid ${getDifficultyColor(project.difficulty)}`,
+                      color: getDifficultyColor(project.difficulty)
+                    }}
                   >
                     {project.difficulty}
-                  </motion.span>
-                  <motion.span 
-                    className="time-badge"
-                    whileHover={{ scale: 1.05 }}
-                  >
+                  </span>
+                  <span className="time-badge">
                     ⏱️ {project.time}
-                  </motion.span>
+                  </span>
                 </div>
 
                 <div className="project-materials">
                   <h4>Materials Needed:</h4>
                   <ul>
                     {project.materials.map((material, idx) => (
-                      <motion.li 
-                        key={idx}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: idx * 0.05 }}
-                      >
-                        {material}
-                      </motion.li>
+                      <li key={idx}>{material}</li>
                     ))}
                   </ul>
                 </div>
@@ -220,34 +186,34 @@ const UpcyclingTips = () => {
                   <h4>Instructions:</h4>
                   <ol>
                     {project.instructions.map((step, idx) => (
-                      <motion.li 
-                        key={idx}
-                        initial={{ opacity: 0, x: -20 }}
-                        whileInView={{ opacity: 1, x: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ delay: idx * 0.05 }}
-                      >
-                        {step}
-                      </motion.li>
+                      <li key={idx}>{step}</li>
                     ))}
                   </ol>
                 </div>
 
-                <motion.div 
-                  className="project-impact"
-                  initial={{ opacity: 0, scale: 0.95 }}
-                  whileInView={{ opacity: 1, scale: 1 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 }}
-                >
+                <div className="project-impact">
                   <strong>Environmental Impact:</strong>
                   <p>{project.impact}</p>
-                </motion.div>
+                </div>
               </div>
             </motion.div>
           );
         })}
       </div>
+
+      {/* View More Button */}
+      <motion.div 
+        className="view-more-container"
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.5, delay: 0.6 }}
+      >
+        <button className="view-more-btn">
+          <span>View More Ideas</span>
+          <FaArrowRight className="arrow-icon" />
+        </button>
+      </motion.div>
     </section>
   );
 };

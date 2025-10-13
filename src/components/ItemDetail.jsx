@@ -1,148 +1,164 @@
 import React, { useContext } from 'react';
-import { motion } from 'framer-motion';
 import { useParams, useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { FaArrowLeft, FaRecycle, FaWrench, FaCheckCircle, FaExclamationTriangle, FaTrash } from 'react-icons/fa';
 import { LocaleContext } from '../context/LocaleContext';
-import { wasteItems } from '../utils/wasteData';
+import '../styles/ItemDetails.css';
 
-const ItemDetail = () => {
-  const { id } = useParams();
+const ItemDetails = () => {
+  const { category } = useParams();
   const navigate = useNavigate();
   const { getBinInfo, getPickupDay } = useContext(LocaleContext);
   
-  const item = wasteItems.find(i => i.id === parseInt(id));
+  const binInfo = getBinInfo(category);
 
-  if (!item) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <p className="text-xl text-gray-600">Item not found</p>
-      </div>
-    );
-  }
+  // Mock data - replace with actual data from your context or API
+  const itemData = {
+    'plastics': {
+      name: 'Plastic Bottle',
+      preparationSteps: [
+        'Remove cap and labels',
+        'Rinse thoroughly with water',
+        'Crush to save space',
+        'Place in designated bin'
+      ],
+      upcyclingTip: 'Transform into a vertical garden planter or bird feeder',
+      specialHandling: false
+    },
+    'paper': {
+      name: 'Paper Waste',
+      preparationSteps: [
+        'Remove any plastic coating',
+        'Keep it dry and clean',
+        'Flatten cardboard boxes',
+        'Bundle newspapers together'
+      ],
+      upcyclingTip: 'Use for crafts, wrapping, or composting (non-glossy paper)',
+      specialHandling: false
+    },
+    'bio': {
+      name: 'Organic Waste',
+      preparationSteps: [
+        'Remove any packaging',
+        'No meat or dairy products',
+        'Cut large items into smaller pieces',
+        'Keep separate from other waste'
+      ],
+      upcyclingTip: 'Create your own compost bin for nutrient-rich garden soil',
+      specialHandling: false
+    },
+    'glass': {
+      name: 'Glass Items',
+      preparationSteps: [
+        'Rinse containers thoroughly',
+        'Remove caps and lids',
+        'Separate by color if required',
+        'Handle broken glass carefully'
+      ],
+      upcyclingTip: 'Use jars for storage, decoration, or candle holders',
+      specialHandling: true
+    },
+    'ewaste': {
+      name: 'Electronic Waste',
+      preparationSteps: [
+        'Remove batteries if possible',
+        'Delete personal data from devices',
+        'Keep accessories together',
+        'Take to designated e-waste collection center'
+      ],
+      upcyclingTip: 'Donate working electronics or repurpose parts for DIY projects',
+      specialHandling: true
+    }
+  };
 
-  const binInfo = getBinInfo(item.category);
-  const pickupDay = getPickupDay(item.category);
+  const item = itemData[category] || itemData['plastics'];
 
   return (
-    <div className="min-h-screen pb-8">
-      <motion.div
-        className="sticky top-0 z-50 bg-white/90 backdrop-blur-md shadow-sm px-4 py-3 flex items-center gap-4"
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
+    <div className="item-details-page">
+      <motion.div 
+        className="item-details-container"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
       >
-        <motion.button
-          onClick={() => navigate(-1)}
-          className="text-2xl"
-          whileHover={{ scale: 1.1, x: -4 }}
-          whileTap={{ scale: 0.9 }}
-        >
-          ←
-        </motion.button>
-        <h1 className="text-xl font-bold text-gray-800">Item Details</h1>
-      </motion.div>
+        {/* Header */}
+        <div className="item-details-header">
+          <button className="back-btn" onClick={() => navigate('/')}>
+            <FaArrowLeft className="back-icon" />
+            <span>Back to Home</span>
+          </button>
+          <h1 className="page-title">Item Details</h1>
+        </div>
 
-      <div className="max-w-4xl mx-auto px-4 py-6">
-        <motion.div
-          className="relative h-64 md:h-96 rounded-3xl overflow-hidden mb-6 shadow-xl"
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ delay: 0.1 }}
-        >
-          <img 
-            src={item.image} 
-            alt={item.name}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute top-4 right-4 text-6xl drop-shadow-lg">
-            {item.icon}
+        {/* Item Card */}
+        <div className="item-card">
+          <div className="item-image-section">
+            <div className="item-image-placeholder">
+              <FaTrash className="item-icon" style={{ color: binInfo.color }} />
+            </div>
           </div>
-        </motion.div>
 
-        <motion.h2 
-          className="text-3xl md:text-4xl font-bold text-gray-800 mb-4"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
-        >
-          {item.name}
-        </motion.h2>
+          <div className="item-info-section">
+            <h2 className="item-name">{item.name}</h2>
 
-        <motion.div
-          className="flex flex-wrap gap-3 mb-6"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 0.3 }}
-        >
-          <span
-            className="px-5 py-2.5 rounded-full text-white font-semibold shadow-md"
-            style={{ backgroundColor: binInfo.color }}
-          >
-            {binInfo.name}
-          </span>
-          <span className="px-5 py-2.5 rounded-full bg-gray-100 text-gray-700 font-medium">
-            {item.category.charAt(0).toUpperCase() + item.category.slice(1)}
-          </span>
-          {item.contamination && (
-            <span className="px-5 py-2.5 rounded-full bg-amber-100 text-amber-700 font-medium">
-              ⚠️ Special Handling
-            </span>
-          )}
-        </motion.div>
-
-        <motion.div
-          className="bg-blue-50 border-l-4 border-blue-500 p-5 rounded-r-xl mb-6"
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.4 }}
-        >
-          <p className="font-semibold text-blue-800 mb-1">Pickup Schedule</p>
-          <p className="text-blue-700">{pickupDay}</p>
-        </motion.div>
-
-        <motion.div
-          className="bg-white rounded-2xl shadow-lg p-6 mb-6"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-        >
-          <h3 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
-            <span>📋</span>
-            Preparation Steps
-          </h3>
-          <ul className="space-y-3">
-            {item.preparation.map((step, idx) => (
-              <motion.li
-                key={idx}
-                className="flex items-start gap-3 bg-gray-50 p-4 rounded-lg"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.6 + idx * 0.1 }}
+            {/* Bin Badge */}
+            <div className="bin-badges">
+              <span 
+                className="bin-badge"
+                style={{
+                  background: `${binInfo.color}15`,
+                  borderColor: `${binInfo.color}40`,
+                  color: binInfo.color
+                }}
               >
-                <span className="text-primary font-bold text-xl">✓</span>
-                <span className="text-gray-700 flex-1">{step}</span>
-              </motion.li>
-            ))}
-          </ul>
-        </motion.div>
+                <FaTrash /> {binInfo.name}
+              </span>
+            </div>
 
-        {item.upcyclingTip && (
-          <motion.div
-            className="bg-gradient-to-br from-emerald-50 to-green-50 rounded-2xl shadow-lg p-6 border-2 border-emerald-200"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.8 }}
-          >
-            <h3 className="text-xl font-bold text-emerald-700 mb-3 flex items-center gap-2">
-              <span className="text-2xl">💡</span>
-              Upcycling Idea
-            </h3>
-            <p className="text-gray-700 leading-relaxed text-lg">
-              {item.upcyclingTip}
-            </p>
-          </motion.div>
-        )}
-      </div>
+            {/* Special Handling Alert */}
+            {item.specialHandling && (
+              <div className="special-handling-alert">
+                <FaExclamationTriangle className="alert-icon" />
+                <div className="alert-content">
+                  <h4 className="alert-title">Special Handling Required</h4>
+                  <p className="alert-description">
+                    This item requires special care during disposal.
+                  </p>
+                </div>
+              </div>
+            )}
+
+            {/* Preparation Steps */}
+            <div className="preparation-section">
+              <h3 className="section-heading">
+                <FaWrench className="heading-icon" />
+                Preparation Steps
+              </h3>
+              <div className="steps-list">
+                {item.preparationSteps.map((step, idx) => (
+                  <div key={idx} className="step-item">
+                    <FaCheckCircle className="step-check" />
+                    <p className="step-text">{step}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Upcycling Tip */}
+            {item.upcyclingTip && (
+              <div className="upcycling-box">
+                <h3 className="upcycling-heading">
+                  <FaRecycle className="heading-icon" />
+                  Upcycling Idea
+                </h3>
+                <p className="upcycling-content">{item.upcyclingTip}</p>
+              </div>
+            )}
+          </div>
+        </div>
+      </motion.div>
     </div>
   );
 };
 
-export default ItemDetail;
+export default ItemDetails;

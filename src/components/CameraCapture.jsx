@@ -1,7 +1,7 @@
 import React, { useRef, useState, useCallback, useContext } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import Webcam from 'react-webcam';
-import { FaCamera, FaRedo, FaBrain } from 'react-icons/fa';
+import { FaCamera, FaRedo, FaBrain, FaUpload, FaImage } from 'react-icons/fa';
 import { LocaleContext } from '../context/LocaleContext';
 import { classifyWaste } from '../api/wasteClassifier';
 import ResultSheet from './ResultSheet';
@@ -9,6 +9,7 @@ import '../styles/CameraCapture.css';
 
 const CameraCapture = ({ onClose }) => {
   const webcamRef = useRef(null);
+  const fileInputRef = useRef(null);
   const [imgSrc, setImgSrc] = useState(null);
   const [result, setResult] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -18,6 +19,21 @@ const CameraCapture = ({ onClose }) => {
     const imageSrc = webcamRef.current.getScreenshot();
     setImgSrc(imageSrc);
   }, []);
+
+  const handleFileUpload = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImgSrc(reader.result);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const triggerFileInput = () => {
+    fileInputRef.current.click();
+  };
 
   const retake = () => {
     setImgSrc(null);
@@ -106,6 +122,21 @@ const CameraCapture = ({ onClose }) => {
                     <div className="ultra-capture-inner" />
                   </div>
                 </button>
+
+                {/* Upload Button */}
+                <button className="ultra-upload-btn" onClick={triggerFileInput}>
+                  <FaUpload className="upload-icon" />
+                  <span>Upload Image</span>
+                </button>
+
+                {/* Hidden File Input */}
+                <input
+                  ref={fileInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handleFileUpload}
+                  style={{ display: 'none' }}
+                />
               </div>
             </>
           ) : (

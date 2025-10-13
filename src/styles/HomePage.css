@@ -283,6 +283,27 @@
   width: 100%;
 }
 
+.video-container {
+  position: relative;
+  min-height: 500px;
+}
+
+.video-wrapper {
+  max-width: 1200px;
+  margin: 0 auto;
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(16, 185, 129, 0.3);
+  border: 2px solid rgba(16, 185, 129, 0.2);
+  background: #000;
+}
+
+.demo-video {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #000;
+}
 
 .steps-container {
   display: grid;
@@ -438,11 +459,23 @@
     max-width: 1000px;
     padding: 0 1.5rem;
   }
+
+  .video-container {
+    min-height: 400px;
+  }
 }
 
 @media (max-width: 768px) {
   .hero-content-centered {
     padding: 0 1rem;
+  }
+
+  .video-container {
+    min-height: 300px;
+  }
+
+  .video-wrapper {
+    border-radius: 1rem;
   }
 }
 
@@ -472,6 +505,10 @@
 
   .stats-grid {
     grid-template-columns: 1fr;
+  }
+
+  .video-container {
+    min-height: 250px;
   }
 }
 
