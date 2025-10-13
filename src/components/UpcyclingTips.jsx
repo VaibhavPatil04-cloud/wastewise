@@ -1,9 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useNavigate } from 'react-router-dom';
 import { FaSeedling, FaBox, FaLightbulb, FaCouch, FaArrowRight } from 'react-icons/fa';
 import '../styles/UpcyclingTips.css';
 
 const UpcyclingTips = () => {
+  const navigate = useNavigate();
+
   const upcyclingProjects = [
     {
       id: 1,
@@ -88,7 +91,6 @@ const UpcyclingTips = () => {
     }
   };
 
-  // Animation variants for cards
   const cardVariants = {
     hidden: {
       opacity: 0,
@@ -120,13 +122,13 @@ const UpcyclingTips = () => {
   };
 
   return (
-    <section id="upcycling-tips" className="upcycling-section">
-      <motion.div 
+    <section className="upcycling-section" id="upcycling">
+      <motion.div
         className="upcycling-header"
+        variants={headerVariants}
         initial="hidden"
         whileInView="visible"
-        viewport={{ once: true }}
-        variants={headerVariants}
+        viewport={{ once: false, amount: 0.3 }}
       >
         <h2 className="upcycling-title">Upcycling Tips & Ideas</h2>
         <p className="upcycling-subtitle">
@@ -142,11 +144,15 @@ const UpcyclingTips = () => {
               key={project.id}
               className="project-card"
               custom={index}
+              variants={cardVariants}
               initial="hidden"
               whileInView="visible"
-              viewport={{ once: true, margin: "-100px" }}
-              variants={cardVariants}
-              whileHover={{ y: -10, transition: { duration: 0.3 } }}
+              viewport={{ once: false, amount: 0.2 }}
+              whileHover={{ 
+                y: -10, 
+                boxShadow: "0 20px 40px rgba(0,0,0,0.3)",
+                transition: { duration: 0.3 }
+              }}
             >
               <div className="project-header">
                 <div className="project-image">
@@ -159,18 +165,12 @@ const UpcyclingTips = () => {
 
                 <div className="project-meta">
                   <span 
-                    className="difficulty-badge"
-                    style={{ 
-                      background: `${getDifficultyColor(project.difficulty)}20`,
-                      border: `1px solid ${getDifficultyColor(project.difficulty)}`,
-                      color: getDifficultyColor(project.difficulty)
-                    }}
+                    className="difficulty-badge" 
+                    style={{ backgroundColor: getDifficultyColor(project.difficulty) }}
                   >
                     {project.difficulty}
                   </span>
-                  <span className="time-badge">
-                    ⏱️ {project.time}
-                  </span>
+                  <span className="time-badge">⏱️ {project.time}</span>
                 </div>
 
                 <div className="project-materials">
@@ -201,19 +201,21 @@ const UpcyclingTips = () => {
         })}
       </div>
 
-      {/* View More Button */}
-      <motion.div 
-        className="view-more-container"
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
-        transition={{ duration: 0.5, delay: 0.6 }}
-      >
-        <button className="view-more-btn">
-          <span>View More Ideas</span>
-          <FaArrowRight className="arrow-icon" />
-        </button>
-      </motion.div>
+      {/* View More Button - Navigate to UpcyclingTipsPage */}
+      <div className="view-more-container">
+        <motion.button
+          className="view-more-btn"
+          onClick={() => navigate('/upcycling-tips')}
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: false }}
+          transition={{ duration: 0.5 }}
+        >
+          View More Ideas <FaArrowRight className="arrow-icon" />
+        </motion.button>
+      </div>
     </section>
   );
 };

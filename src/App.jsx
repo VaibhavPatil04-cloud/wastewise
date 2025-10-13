@@ -7,6 +7,7 @@ import Header from './components/Header';
 import HomePage from './components/HomePage';
 import ItemDetail from './components/ItemDetail';
 import UpcyclingTips from './components/UpcyclingTips';
+import UpcyclingTipsPage from './components/UpcyclingTipsPage';
 import Footer from './components/Footer';
 
 function App() {
@@ -24,15 +25,13 @@ function App() {
   return (
     <LocaleProvider>
       <Router>
-        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-900">
-          <Header />
-          <Routes>
-            <Route path="/" element={<HomePage />} />
-            <Route path="/item/:id" element={<ItemDetail />} />
-            <Route path="/tips" element={<UpcyclingTips />} />
-          </Routes>
-          <Footer />
-        </div>
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/item/:category" element={<ItemDetail />} />
+          <Route path="/upcycling-tips" element={<UpcyclingTipsPage />} />
+        </Routes>
+        <Footer />
       </Router>
     </LocaleProvider>
   );
