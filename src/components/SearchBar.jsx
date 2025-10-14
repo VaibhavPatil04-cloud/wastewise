@@ -1,78 +1,103 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FaSearch, FaChevronRight } from 'react-icons/fa';
-import { wasteItems } from '../utils/wasteData';
+import { FaSearch, FaSpinner } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
+import { generateWasteInfoFromSearch } from '../api/geminiAPI';
+import ResultSheet from './ResultSheet';
 import '../styles/SearchBar.css';
 
 const SearchBar = () => {
   const [query, setQuery] = useState('');
-  const [results, setResults] = useState([]);
-  const [showResults, setShowResults] = useState(false);
+  const [isSearching, setIsSearching] = useState(false);
+  const [searchResult, setSearchResult] = useState(null);
+  const [showResultSheet, setShowResultSheet] = useState(false);
   const navigate = useNavigate();
 
-  const handleSearch = (value) => {
-    setQuery(value);
-    if (value.trim().length > 0) {
-      const filtered = wasteItems.filter(item =>
-        item.name.toLowerCase().includes(value.toLowerCase()) ||
-        item.category.toLowerCase().includes(value.toLowerCase())
-      );
-      setResults(filtered);
-      setShowResults(true);
-    } else {
-      setResults([]);
-      setShowResults(false);
+  const handleSearch = async (e) => {
+    e.preventDefault();
+    
+    if (!query.trim()) return;
+
+    setIsSearching(true);
+
+    try {
+      // Generate AI-powered waste information from search query
+      const result = await generateWasteInfoFromSearch(query.trim());
+      
+      setSearchResult(result);
+      setShowResultSheet(true);
+    } catch (error) {
+      console.error('Search error:', error);
+      // Show error result
+      setSearchResult({
+        name: query,
+        category: 'residual',
+        confidence: 0.5,
+        itemName: query,
+        preparationSteps: [
+          'Check local recycling guidelines',
+          'Clean the item if needed',
+          'Consult waste management services'
+        ],
+        upcyclingTip: 'Consider creative reuse before disposal',
+        environmentalImpact: 'Proper waste sorting helps protect the environment.',
+        disposalInstructions: 'If unsure, contact local waste management.',
+        aiGenerated: false
+      });
+      setShowResultSheet(true);
+    } finally {
+      setIsSearching(false);
     }
   };
 
-  const selectItem = (item) => {
-    navigate(`/item/${item.id}`);
+  const handleCloseResult = () => {
+    setShowResultSheet(false);
     setQuery('');
-    setShowResults(false);
   };
 
   return (
-    <div className="search-container">
-      <input
-        type="text"
-        className="search-input"
-        placeholder="Search for any waste item..."
-        value={query}
-        onChange={(e) => handleSearch(e.target.value)}
-        onFocus={() => query && setShowResults(true)}
-      />
-      <FaSearch className="search-icon" />
+    <>
+      <form className="search-container" onSubmit={handleSearch}>
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search for any waste item (e.g., plastic bottle, cardboard box)..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          disabled={isSearching}
+        />
+        <button 
+          type="submit" 
+          className="search-icon-button"
+          disabled={isSearching || !query.trim()}
+          style={{ 
+            background: 'none', 
+            border: 'none', 
+            cursor: isSearching ? 'not-allowed' : 'pointer',
+            position: 'absolute',
+            right: '1.75rem',
+            top: '50%',
+            transform: 'translateY(-50%)',
+            color: isSearching ? 'rgba(255, 255, 255, 0.3)' : 'rgba(255, 255, 255, 0.7)'
+          }}
+        >
+          {isSearching ? (
+            <FaSpinner className="search-icon spinning" />
+          ) : (
+            <FaSearch className="search-icon" />
+          )}
+        </button>
+      </form>
 
       <AnimatePresence>
-        {showResults && results.length > 0 && (
-          <motion.div
-            className="search-results"
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.2 }}
-          >
-            {results.map((item) => (
-              <motion.div
-                key={item.id}
-                className="search-result-item"
-                onClick={() => selectItem(item)}
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.2 }}
-              >
-                <span className="search-result-icon">{item.icon}</span>
-                <div className="search-result-content">
-                  <div className="search-result-title">{item.name}</div>
-                  <div className="search-result-category">{item.category}</div>
-                </div>
-                <FaChevronRight className="search-result-arrow" />
-              </motion.div>
-            ))}
-          </motion.div>
+        {showResultSheet && searchResult && (
+          <ResultSheet 
+            result={searchResult} 
+            onClose={handleCloseResult}
+          />
         )}
       </AnimatePresence>
-    </div>
+    </>
   );
 };
 

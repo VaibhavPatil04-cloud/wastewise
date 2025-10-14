@@ -20,7 +20,15 @@ const ResultSheet = ({ result, onClose }) => {
   const binInfo = getBinInfo(result.category);
 
   const handleBackToHome = () => {
+    onClose();
     navigate('/');
+  };
+
+  const handleOverlayClick = (e) => {
+    // Close if clicking the overlay background
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
   };
 
   return (
@@ -29,6 +37,7 @@ const ResultSheet = ({ result, onClose }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
+      onClick={handleOverlayClick}
     >
       <motion.div
         className="result-sheet"
@@ -36,15 +45,13 @@ const ResultSheet = ({ result, onClose }) => {
         animate={{ y: 0 }}
         exit={{ y: '100%' }}
         transition={{ type: 'spring', damping: 30, stiffness: 300 }}
+        onClick={(e) => e.stopPropagation()}
       >
-        <div className="result-header">
-          <button className="back-button" onClick={handleBackToHome}>
-            <FaArrowLeft /> Back to Home
-          </button>
-          <button className="close-button" onClick={onClose}>
-            <FaTimes />
-          </button>
-        </div>
+        <div className="result-sheet-handle"></div>
+        
+        <button className="close-result-btn" onClick={onClose}>
+          <FaTimes />
+        </button>
 
         <div className="result-content">
           {/* Item Name with AI Badge */}
@@ -62,15 +69,20 @@ const ResultSheet = ({ result, onClose }) => {
           </p>
 
           {/* Bin Information */}
-          <div className="bin-category">
-            {binInfo.bins && binInfo.bins.map((bin, idx) => (
-              <div key={idx} className="bin-badge">
-                {bin.icon} {bin.label}
-              </div>
-            ))}
+          <div className="bin-badges-container">
+            <span 
+              className="bin-badge"
+              style={{
+                background: `${binInfo.color}15`,
+                borderColor: `${binInfo.color}40`,
+                color: binInfo.color
+              }}
+            >
+              <FaRecycle /> {binInfo.name}
+            </span>
           </div>
 
-          {/* Environmental Impact (New) */}
+          {/* Environmental Impact */}
           {result.environmentalImpact && (
             <div className="environmental-impact">
               <h3><FaLeaf /> Environmental Impact</h3>
@@ -80,28 +92,36 @@ const ResultSheet = ({ result, onClose }) => {
 
           {/* Special Handling */}
           {binInfo.specialHandling && (
-            <div className="special-handling">
-              <FaExclamationTriangle />
-              <div>
-                <h3>Special Handling Required</h3>
-                <p>This item requires special care. Please follow the preparation steps carefully.</p>
+            <div className="contamination-alert">
+              <FaExclamationTriangle className="alert-icon" />
+              <div className="alert-content">
+                <h3 className="alert-title">Special Handling Required</h3>
+                <p className="alert-description">
+                  This item requires special care. Please follow the preparation steps carefully.
+                </p>
               </div>
             </div>
           )}
 
           {/* Preparation Steps */}
           {result.preparationSteps && result.preparationSteps.length > 0 && (
-            <div className="preparation-steps">
-              <h3><FaWrench /> Preparation Steps</h3>
-              <ol>
+            <div className="preparation-section">
+              <h3 className="section-title">
+                <FaWrench className="section-icon" />
+                Preparation Steps
+              </h3>
+              <div className="preparation-list">
                 {result.preparationSteps.map((step, idx) => (
-                  <li key={idx}>{step}</li>
+                  <div key={idx} className="preparation-item">
+                    <FaCheckCircle className="check-icon" />
+                    <p className="preparation-text">{step}</p>
+                  </div>
                 ))}
-              </ol>
+              </div>
             </div>
           )}
 
-          {/* Disposal Instructions (New) */}
+          {/* Disposal Instructions */}
           {result.disposalInstructions && (
             <div className="disposal-instructions">
               <h3><FaRecycle /> Disposal Instructions</h3>
@@ -111,18 +131,29 @@ const ResultSheet = ({ result, onClose }) => {
 
           {/* Upcycling Tip */}
           {result.upcyclingTip && (
-            <div className="upcycling-tip">
-              <h3><FaCheckCircle /> Upcycling Idea</h3>
-              <p>{result.upcyclingTip}</p>
+            <div className="upcycling-section">
+              <h3 className="upcycling-title">
+                <FaRecycle className="section-icon" />
+                Upcycling Idea
+              </h3>
+              <p className="upcycling-text">{result.upcyclingTip}</p>
             </div>
           )}
 
           <button 
-            className="view-details-button"
+            className="view-details-btn"
             onClick={() => navigate(`/item/${result.category}`)}
           >
             <FaRecycle />
             View Full Details
+          </button>
+
+          <button 
+            className="back-to-home-btn"
+            onClick={handleBackToHome}
+          >
+            <FaArrowLeft className="back-icon" />
+            <span>Back to Home</span>
           </button>
         </div>
       </motion.div>

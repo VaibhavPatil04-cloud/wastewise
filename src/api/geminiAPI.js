@@ -312,3 +312,192 @@ Return as JSON array: ["idea 1", "idea 2", "idea 3", "idea 4", "idea 5"]`;
     return [];
   }
 };
+
+/**
+ * Generate detailed upcycling project ideas for UpcyclingTipsPage
+ * @param {string} itemQuery - User's search query for item
+ * @returns {Array} Array of detailed upcycling projects
+ */
+export const generateUpcyclingIdeasDetailed = async (itemQuery) => {
+  try {
+    const timestamp = Date.now();
+    const uniquePrompt = `You are a creative upcycling and DIY expert. [Request ID: ${timestamp}]
+
+A user wants upcycling ideas for: "${itemQuery}"
+
+Generate 5 UNIQUE, CREATIVE, and PRACTICAL upcycling projects specifically for "${itemQuery}".
+
+Respond ONLY with a JSON array in this exact format:
+[
+  {
+    "title": "Creative project name using ${itemQuery}",
+    "category": "material type (e.g., plastic, cardboard, glass, metal, fabric)",
+    "difficulty": "Easy, Medium, or Hard",
+    "time": "estimated time (e.g., 30 mins, 1 hour, 2 hours)",
+    "materials": ["${itemQuery}", "material 2", "material 3", "material 4"],
+    "instructions": [
+      "Step 1: SPECIFIC action for ${itemQuery}",
+      "Step 2: Another SPECIFIC step",
+      "Step 3: Continue...",
+      "Step 4: ...",
+      "Step 5: Final step"
+    ],
+    "impact": "Environmental impact statement about reusing ${itemQuery}"
+  }
+]
+
+CRITICAL REQUIREMENTS:
+- Generate exactly 5 different projects
+- Each project must be UNIQUE and CREATIVE
+- All content must be SPECIFIC to "${itemQuery}"
+- Instructions should have 5-7 detailed steps
+- Materials list should have 3-5 items
+- Be practical and achievable at home
+- Focus on real, useful end products
+- Mention "${itemQuery}" explicitly in titles and instructions
+- Return ONLY valid JSON array`;
+
+    const requestBody = {
+      contents: [{
+        parts: [{ text: uniquePrompt }]
+      }],
+      generationConfig: {
+        temperature: 1.0,
+        topK: 64,
+        topP: 0.95,
+        maxOutputTokens: 2048,
+        responseMimeType: "application/json"
+      }
+    };
+
+    console.log('Generating detailed upcycling ideas for:', itemQuery);
+
+    const response = await fetch(`${GEMINI_API_URL}?key=${GEMINI_API_KEY}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestBody)
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Gemini API error response:', errorData);
+      throw new Error(`Gemini API error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (!data.candidates || data.candidates.length === 0) {
+      throw new Error('No candidates in Gemini response');
+    }
+
+    if (!data.candidates[0].content?.parts?.[0]) {
+      throw new Error('Invalid response structure');
+    }
+
+    const generatedText = data.candidates[0].content.parts[0].text;
+    console.log('Generated upcycling projects:', generatedText);
+
+    let projects;
+    try {
+      projects = JSON.parse(generatedText);
+    } catch (parseError) {
+      const jsonMatch = generatedText.match(/\[[\s\S]*\]/);
+      if (!jsonMatch) {
+        throw new Error('Failed to parse JSON from Gemini response');
+      }
+      projects = JSON.parse(jsonMatch[0]);
+    }
+
+    // Validate projects structure
+    if (!Array.isArray(projects) || projects.length === 0) {
+      throw new Error('Invalid projects structure');
+    }
+
+    console.log('Parsed upcycling projects:', projects);
+    return projects;
+
+  } catch (error) {
+    console.error('Error generating detailed upcycling ideas:', error);
+
+    // Return fallback projects
+    return [
+      {
+        title: `Creative ${itemQuery} Organizer`,
+        category: 'general',
+        difficulty: 'Easy',
+        time: '30 mins',
+        materials: [itemQuery, 'Scissors', 'Paint', 'Glue'],
+        instructions: [
+          `Clean the ${itemQuery} thoroughly`,
+          'Cut or shape as needed',
+          'Paint or decorate with eco-friendly materials',
+          'Let dry completely',
+          'Use for storage or organization'
+        ],
+        impact: `Gives ${itemQuery} a second life and reduces waste`
+      },
+      {
+        title: `${itemQuery} Planter`,
+        category: 'general',
+        difficulty: 'Easy',
+        time: '20 mins',
+        materials: [itemQuery, 'Soil', 'Seeds', 'Drainage tool'],
+        instructions: [
+          `Prepare and clean the ${itemQuery}`,
+          'Create drainage holes at the bottom',
+          'Fill with potting soil',
+          'Plant seeds or small plants',
+          'Water and place in sunlight'
+        ],
+        impact: `Transforms ${itemQuery} into a sustainable garden container`
+      },
+      {
+        title: `Decorative ${itemQuery} Art`,
+        category: 'general',
+        difficulty: 'Medium',
+        time: '1 hour',
+        materials: [itemQuery, 'Acrylic paint', 'Brushes', 'Clear sealant'],
+        instructions: [
+          `Clean and prepare ${itemQuery} surface`,
+          'Sketch your design lightly',
+          'Paint with creative patterns and colors',
+          'Add details and finishing touches',
+          'Apply clear sealant for durability and shine'
+        ],
+        impact: `Creates unique art while repurposing ${itemQuery}`
+      },
+      {
+        title: `${itemQuery} Storage Solution`,
+        category: 'general',
+        difficulty: 'Easy',
+        time: '25 mins',
+        materials: [itemQuery, 'Labels', 'Markers', 'Decorative paper'],
+        instructions: [
+          `Clean ${itemQuery} and remove any existing labels`,
+          'Measure and cut decorative paper if needed',
+          'Attach paper or paint the exterior',
+          'Add custom labels for organization',
+          'Use for storing small items or supplies'
+        ],
+        impact: `Repurposes ${itemQuery} into functional household storage`
+      },
+      {
+        title: `${itemQuery} Gift Container`,
+        category: 'general',
+        difficulty: 'Easy',
+        time: '35 mins',
+        materials: [itemQuery, 'Ribbon', 'Gift wrap', 'Decorative elements'],
+        instructions: [
+          `Thoroughly clean and dry ${itemQuery}`,
+          'Wrap or paint in festive colors',
+          'Add ribbons, bows, or decorative elements',
+          'Fill with gifts, treats, or homemade items',
+          'Present as a unique, eco-friendly gift package'
+        ],
+        impact: `Turns ${itemQuery} into a reusable, environmentally-friendly gift container`
+      }
+    ];
+  }
+};

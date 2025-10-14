@@ -4,23 +4,25 @@ import { useNavigate } from 'react-router-dom';
 import { 
   FaSeedling, FaBox, FaLightbulb, FaCouch, FaWineBottle, 
   FaTshirt, FaCoffee, FaPalette, FaSearch, FaArrowLeft,
-  FaRecycle, FaHammer, FaClock
+  FaRecycle, FaHammer, FaClock, FaRobot, FaSpinner
 } from 'react-icons/fa';
+import { generateUpcyclingIdeasDetailed } from '../api/geminiAPI';
 import '../styles/UpcyclingTipsPage.css';
 
 const UpcyclingTipsPage = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState('');
-  const [filteredProjects, setFilteredProjects] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
+  const [aiGeneratedProjects, setAiGeneratedProjects] = useState([]);
+  const [showAiResults, setShowAiResults] = useState(false);
 
   // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
 
-  // Extended local data - will be replaced with Gemini API
-  const allUpcyclingProjects = [
+  // Default local projects
+  const defaultProjects = [
     {
       id: 1,
       title: "Plastic Bottle Planters",
@@ -74,132 +76,6 @@ const UpcyclingTipsPage = () => {
       icon: FaLightbulb,
       iconColor: "#fbbf24",
       impact: "Repurposes glass jars and reduces electronic waste"
-    },
-    {
-      id: 4,
-      title: "Tire Garden Furniture",
-      category: "rubber",
-      difficulty: "Hard",
-      time: "2 hours",
-      materials: ["Old tires", "Rope", "Cushions", "Paint", "Drill"],
-      instructions: [
-        "Clean tires thoroughly",
-        "Paint with weather-resistant paint",
-        "Wrap with rope for texture",
-        "Add cushions for seating",
-        "Secure all components safely"
-      ],
-      icon: FaCouch,
-      iconColor: "#8b5cf6",
-      impact: "Prevents tire waste and creates durable furniture"
-    },
-    {
-      id: 5,
-      title: "Wine Cork Bulletin Board",
-      category: "cork",
-      difficulty: "Easy",
-      time: "1 hour",
-      materials: ["Wine corks", "Picture frame", "Hot glue gun", "Paint"],
-      instructions: [
-        "Collect enough wine corks",
-        "Remove glass from picture frame",
-        "Arrange corks in desired pattern",
-        "Glue corks to frame backing",
-        "Let dry and hang on wall"
-      ],
-      icon: FaWineBottle,
-      iconColor: "#dc2626",
-      impact: "Reuses wine corks and creates functional decor"
-    },
-    {
-      id: 6,
-      title: "T-Shirt Tote Bag",
-      category: "fabric",
-      difficulty: "Easy",
-      time: "20 mins",
-      materials: ["Old t-shirt", "Scissors", "Ruler"],
-      instructions: [
-        "Cut off sleeves of t-shirt",
-        "Cut neckline wider",
-        "Turn inside out",
-        "Cut fringe at bottom",
-        "Tie fringe together to close bottom"
-      ],
-      icon: FaTshirt,
-      iconColor: "#06b6d4",
-      impact: "Transforms old clothing into reusable shopping bags"
-    },
-    {
-      id: 7,
-      title: "Coffee Can Organizer",
-      category: "metal",
-      difficulty: "Easy",
-      time: "40 mins",
-      materials: ["Coffee cans", "Spray paint", "Fabric/paper", "Glue", "Magnets"],
-      instructions: [
-        "Clean and remove labels from cans",
-        "Paint cans with spray paint",
-        "Decorate with fabric or decorative paper",
-        "Add magnets to back for wall mounting",
-        "Use for organizing kitchen utensils or office supplies"
-      ],
-      icon: FaCoffee,
-      iconColor: "#92400e",
-      impact: "Keeps metal cans out of recycling stream and organizes space"
-    },
-    {
-      id: 8,
-      title: "Crayon Art Canvas",
-      category: "crayon",
-      difficulty: "Medium",
-      time: "1.5 hours",
-      materials: ["Old crayons", "Canvas", "Hot glue gun", "Hair dryer"],
-      instructions: [
-        "Arrange crayons along top of canvas",
-        "Glue crayons in place",
-        "Use hair dryer to melt crayons",
-        "Let wax drip down canvas",
-        "Create colorful abstract art"
-      ],
-      icon: FaPalette,
-      iconColor: "#ec4899",
-      impact: "Gives new life to broken crayons and creates unique artwork"
-    },
-    {
-      id: 9,
-      title: "Plastic Bag Rope",
-      category: "plastic",
-      difficulty: "Medium",
-      time: "2 hours",
-      materials: ["Plastic bags", "Scissors", "Crochet hook (optional)"],
-      instructions: [
-        "Cut plastic bags into strips",
-        "Tie strips together end-to-end",
-        "Roll into a ball like yarn",
-        "Use for weaving, crocheting, or crafts",
-        "Create durable outdoor mats or bags"
-      ],
-      icon: FaRecycle,
-      iconColor: "#059669",
-      impact: "Diverts hundreds of plastic bags from landfills"
-    },
-    {
-      id: 10,
-      title: "Pallet Wood Shelf",
-      category: "wood",
-      difficulty: "Hard",
-      time: "3 hours",
-      materials: ["Wooden pallet", "Sandpaper", "Wood stain", "Brackets", "Screws"],
-      instructions: [
-        "Disassemble pallet carefully",
-        "Sand wood pieces smooth",
-        "Apply wood stain or paint",
-        "Assemble shelf structure",
-        "Mount with brackets on wall"
-      ],
-      icon: FaHammer,
-      iconColor: "#d97706",
-      impact: "Reclaims discarded pallets into functional furniture"
     }
   ];
 
@@ -212,30 +88,88 @@ const UpcyclingTipsPage = () => {
     }
   };
 
-  const handleSearch = (e) => {
+  const getIconForCategory = (category) => {
+    const iconMap = {
+      'plastic': FaSeedling,
+      'cardboard': FaBox,
+      'glass': FaLightbulb,
+      'paper': FaPalette,
+      'metal': FaHammer,
+      'fabric': FaTshirt,
+      'wood': FaHammer,
+      'bottle': FaWineBottle
+    };
+    
+    const lowerCategory = category?.toLowerCase() || '';
+    for (const [key, icon] of Object.entries(iconMap)) {
+      if (lowerCategory.includes(key)) return icon;
+    }
+    return FaRecycle;
+  };
+
+  const getIconColor = (category) => {
+    const colorMap = {
+      'plastic': '#10b981',
+      'cardboard': '#f59e0b',
+      'glass': '#fbbf24',
+      'paper': '#ec4899',
+      'metal': '#d97706',
+      'fabric': '#06b6d4',
+      'wood': '#92400e',
+      'bottle': '#dc2626'
+    };
+    
+    const lowerCategory = category?.toLowerCase() || '';
+    for (const [key, color] of Object.entries(colorMap)) {
+      if (lowerCategory.includes(key)) return color;
+    }
+    return '#10b981';
+  };
+
+  const handleSearch = async (e) => {
     e.preventDefault();
+    
     if (searchQuery.trim() === '') {
-      setFilteredProjects([]);
-      setIsSearching(false);
+      setShowAiResults(false);
+      setAiGeneratedProjects([]);
       return;
     }
 
     setIsSearching(true);
-    
-    // Filter projects based on search query
-    // TODO: Replace with Gemini API call
-    const results = allUpcyclingProjects.filter(project => 
-      project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.category.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      project.materials.some(material => 
-        material.toLowerCase().includes(searchQuery.toLowerCase())
-      )
-    );
 
-    setFilteredProjects(results);
+    try {
+      // Call Gemini API to generate upcycling ideas
+      const aiProjects = await generateUpcyclingIdeasDetailed(searchQuery.trim());
+      
+      // Transform AI response to match our project structure
+      const transformedProjects = aiProjects.map((project, index) => ({
+        id: `ai-${index}`,
+        title: project.title,
+        category: project.category || searchQuery,
+        difficulty: project.difficulty || 'Medium',
+        time: project.time || '1 hour',
+        materials: project.materials || [],
+        instructions: project.instructions || [],
+        icon: getIconForCategory(project.category || searchQuery),
+        iconColor: getIconColor(project.category || searchQuery),
+        impact: project.impact || `Creative reuse of ${searchQuery}`,
+        isAiGenerated: true
+      }));
+
+      setAiGeneratedProjects(transformedProjects);
+      setShowAiResults(true);
+
+    } catch (error) {
+      console.error('Error generating upcycling ideas:', error);
+      // Show empty results on error
+      setAiGeneratedProjects([]);
+      setShowAiResults(true);
+    } finally {
+      setIsSearching(false);
+    }
   };
 
-  const displayProjects = isSearching ? filteredProjects : allUpcyclingProjects;
+  const displayProjects = showAiResults ? aiGeneratedProjects : defaultProjects;
 
   const cardVariants = {
     hidden: { opacity: 0, y: 50, scale: 0.9 },
@@ -293,16 +227,45 @@ const UpcyclingTipsPage = () => {
               placeholder="Search by item (e.g., plastic bottle, cardboard, glass jar)..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              disabled={isSearching}
             />
-            <button type="submit" className="search-submit-btn">
-              Search
+            <button 
+              type="submit" 
+              className="search-submit-btn"
+              disabled={isSearching}
+            >
+              {isSearching ? (
+                <>
+                  <FaSpinner className="spinning" /> Generating...
+                </>
+              ) : (
+                'Search'
+              )}
             </button>
           </div>
-          {isSearching && (
-            <p className="search-results-text">
-              Found {filteredProjects.length} project{filteredProjects.length !== 1 ? 's' : ''} 
-              {filteredProjects.length === 0 && ' - Try a different search term'}
-            </p>
+          {showAiResults && (
+            <div className="search-results-info">
+              {aiGeneratedProjects.length > 0 ? (
+                <p className="search-results-text">
+                  <FaRobot style={{ display: 'inline', marginRight: '8px' }} />
+                  Found {aiGeneratedProjects.length} AI-generated project{aiGeneratedProjects.length !== 1 ? 's' : ''} for "{searchQuery}"
+                </p>
+              ) : (
+                <p className="search-results-text no-results-text">
+                  No projects found - Try a different search term
+                </p>
+              )}
+              <button 
+                className="clear-search-btn"
+                onClick={() => {
+                  setSearchQuery('');
+                  setShowAiResults(false);
+                  setAiGeneratedProjects([]);
+                }}
+              >
+                Show All Projects
+              </button>
+            </div>
           )}
         </motion.form>
       </div>
@@ -323,6 +286,12 @@ const UpcyclingTipsPage = () => {
                 whileHover={{ y: -10, boxShadow: "0 20px 40px rgba(0,0,0,0.3)" }}
                 layout
               >
+                {project.isAiGenerated && (
+                  <div className="ai-generated-badge">
+                    <FaRobot /> AI Generated
+                  </div>
+                )}
+                
                 <div 
                   className="project-icon-wrapper" 
                   style={{ backgroundColor: `${project.iconColor}20` }}
@@ -378,7 +347,7 @@ const UpcyclingTipsPage = () => {
         </AnimatePresence>
       </div>
 
-      {displayProjects.length === 0 && isSearching && (
+      {displayProjects.length === 0 && showAiResults && !isSearching && (
         <motion.div 
           className="no-results"
           initial={{ opacity: 0 }}
@@ -387,6 +356,17 @@ const UpcyclingTipsPage = () => {
           <FaSearch className="no-results-icon" />
           <h3>No projects found</h3>
           <p>Try searching for common waste items like "plastic", "cardboard", "glass", or "bottle"</p>
+        </motion.div>
+      )}
+
+      {isSearching && (
+        <motion.div 
+          className="loading-state"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+        >
+          <FaSpinner className="loading-spinner spinning" />
+          <p>Generating creative upcycling ideas...</p>
         </motion.div>
       )}
     </div>
