@@ -537,3 +537,80 @@
   margin: 0;
   font-size: 0.95rem;
 }
+
+/* Add this to your existing ResultSheet.css */
+
+.result-message {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  line-height: 1.7;
+  margin: 1.5rem 0 2rem 0;
+  padding: 1.25rem;
+  background: linear-gradient(145deg, rgba(31, 41, 55, 0.5), rgba(17, 24, 39, 0.7));
+  border-radius: 1rem;
+  border: 1px solid rgba(75, 85, 99, 0.2);
+  font-family: 'Playfair Display', serif;
+}
+
+.result-message strong {
+  font-weight: 700;
+}
+
+/* Update view-details-btn to be more prominent */
+.view-details-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #10b981, #059669);
+  color: white;
+  padding: 1.25rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 1.05rem;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  font-family: 'Playfair Display', serif;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.view-details-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.view-details-btn:hover::before {
+  opacity: 1;
+}
+
+.view-details-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 25px rgba(16, 185, 129, 0.4);
+}
+
+.view-details-btn:active {
+  transform: translateY(-1px);
+}
+
+.view-details-btn svg,
+.view-details-btn span {
+  position: relative;
+  z-index: 1;
+}
+
+@media (max-width: 640px) {
+  .result-message {
+    font-size: 0.95rem;
+    padding: 1rem;
+    margin: 1.25rem 0 1.5rem 0;
+  }
+}

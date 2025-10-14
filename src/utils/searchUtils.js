@@ -1,5 +1,5 @@
 // src/utils/searchUtils.js
-import { wasteItems } from '../data/wasteData';
+import { wasteItems } from './wasteData';
 
 /**
  * Search local waste items database
