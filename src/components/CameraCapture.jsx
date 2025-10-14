@@ -17,8 +17,14 @@ const CameraCapture = ({ onClose }) => {
   const { locale } = useContext(LocaleContext);
   const navigate = useNavigate();
 
+  // Detect if user is on mobile
+  const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
   const capture = useCallback(() => {
-    const imageSrc = webcamRef.current.getScreenshot();
+    const imageSrc = webcamRef.current.getScreenshot({
+      width: 1920,
+      height: 1440,
+    });
     setImgSrc(imageSrc);
     setError(null);
   }, []);
@@ -40,14 +46,53 @@ const CameraCapture = ({ onClose }) => {
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setImgSrc(reader.result);
-        setError(null);
+        // Compress and optimize image for mobile
+        compressImage(reader.result, (compressedImage) => {
+          setImgSrc(compressedImage);
+          setError(null);
+        });
       };
       reader.onerror = () => {
         setError('Failed to read image file');
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  // Compress image for better API performance
+  const compressImage = (base64Image, callback) => {
+    const img = new Image();
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      // Set max dimensions while maintaining aspect ratio
+      const MAX_WIDTH = 1920;
+      const MAX_HEIGHT = 1440;
+      let width = img.width;
+      let height = img.height;
+
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height *= MAX_WIDTH / width;
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width *= MAX_HEIGHT / height;
+          height = MAX_HEIGHT;
+        }
+      }
+
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img, 0, 0, width, height);
+      
+      // Convert to JPEG with high quality
+      const compressedBase64 = canvas.toDataURL('image/jpeg', 0.9);
+      callback(compressedBase64);
+    };
+    img.src = base64Image;
   };
 
   const triggerFileInput = () => {
@@ -130,8 +175,12 @@ const CameraCapture = ({ onClose }) => {
                 <div className="ultra-instruction-content">
                   <FaCamera className="ultra-instruction-icon" />
                   <div className="ultra-instruction-text-group">
-                    <div className="ultra-instruction-text">Position waste item in frame</div>
-                    <div className="ultra-instruction-hint">Keep item centered and well-lit</div>
+                    <div className="ultra-instruction-text">
+                      {isMobile ? 'Position item clearly in frame' : 'Position waste item in frame'}
+                    </div>
+                    <div className="ultra-instruction-hint">
+                      {isMobile ? 'Ensure good lighting and focus' : 'Keep item centered and well-lit'}
+                    </div>
                   </div>
                 </div>
               </div>
@@ -142,15 +191,17 @@ const CameraCapture = ({ onClose }) => {
                   ref={webcamRef}
                   audio={false}
                   screenshotFormat="image/jpeg"
+                  screenshotQuality={1}
                   className="ultra-webcam"
                   videoConstraints={{
-                    facingMode: 'environment',
-                    width: 1280,
-                    height: 960,
+                    facingMode: isMobile ? { exact: 'environment' } : 'user',
+                    width: { ideal: 1920 },
+                    height: { ideal: 1440 },
+                    aspectRatio: { ideal: 4/3 }
                   }}
                   onUserMediaError={(err) => {
                     console.error('Camera error:', err);
-                    setError('Camera access denied. Please allow camera permissions.');
+                    setError('Camera access denied. Please allow camera permissions or upload an image.');
                   }}
                 />
 
@@ -193,6 +244,7 @@ const CameraCapture = ({ onClose }) => {
                   type="file"
                   ref={fileInputRef}
                   accept="image/*"
+                  capture={isMobile ? "environment" : undefined}
                   onChange={handleFileUpload}
                   style={{ display: 'none' }}
                 />
