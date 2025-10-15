@@ -1,7 +1,7 @@
 // src/api/geminiAPI.js
 // Gemini API Integration for generating waste disposal instructions
 
-const GEMINI_API_KEY = 'AIzaSyBrH25SxbvTm1JBeYOkzJjxezZju7J9dE8';
+const GEMINI_API_KEY = 'AIzaSyAGveSOxS8WEpZDpn1hctcMvTNzhsqb8H0';
 const GEMINI_API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent';
 
 /**
